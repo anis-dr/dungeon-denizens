@@ -20,6 +20,11 @@ pub fn player_input(
     _ => Point::new(0, 0),
   };
 
+  // ! If the player didn't move, don't do anything
+  if delta == Point::zero() {
+    return;
+  }
+
   let (player_entity, destination) = players
     .iter(ecs)
     .map(|(entity, pos)| (*entity, *pos + delta))
