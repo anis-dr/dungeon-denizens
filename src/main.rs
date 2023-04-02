@@ -44,11 +44,9 @@ impl State {
     spawn_amulet_of_yala(&mut ecs, map_builder.amulet_start);
 
     map_builder
-      .rooms
+      .monster_spawns
       .iter()
-      .skip(1)
-      .map(|r| r.center())
-      .for_each(|pos| spawn_monster(&mut ecs, &mut rng, pos));
+      .for_each(|pos| spawn_monster(&mut ecs, &mut rng, *pos));
 
     resources.insert(map_builder.map);
     resources.insert(Camera::new(map_builder.player_start));
@@ -69,12 +67,12 @@ impl State {
     let map_builder = MapBuilder::new(&mut rng);
     spawn_player(&mut self.ecs, map_builder.player_start);
     spawn_amulet_of_yala(&mut self.ecs, map_builder.amulet_start);
+
     map_builder
-      .rooms
+      .monster_spawns
       .iter()
-      .skip(1)
-      .map(|r| r.center())
-      .for_each(|pos| spawn_monster(&mut self.ecs, &mut rng, pos));
+      .for_each(|pos| spawn_monster(&mut self.ecs, &mut rng, *pos));
+
     self.resources.insert(map_builder.map);
     self.resources.insert(Camera::new(map_builder.player_start));
     self.resources.insert(TurnState::AwaitingInput);
@@ -87,7 +85,7 @@ impl State {
       4,
       WHITE,
       BLACK,
-      "Slain by a monster, your hero's journey has come to a  premature end.",
+      "Slain by a monster, your hero's journey has come to a premature end.",
     );
     ctx.print_color_centered(
       5,
@@ -101,7 +99,7 @@ impl State {
       BLACK,
       "Don't worry, you can always try again with a new hero.",
     );
-    ctx.print_color_centered(9, GREEN, BLACK, "Press 1 to play  again.");
+    ctx.print_color_centered(9, GREEN, BLACK, "Press 1 to play again.");
 
     if let Some(VirtualKeyCode::Key1) = ctx.key {
       self.reset_game_state();
@@ -115,8 +113,7 @@ impl State {
       4,
       WHITE,
       BLACK,
-      "You put on the Amulet of Yala and feel its power course through \
-        your veins.",
+      "You put on the Amulet of Yala and feel its power course through your veins.",
     );
     ctx.print_color_centered(
       5,
@@ -124,13 +121,7 @@ impl State {
       BLACK,
       "Your town is saved, and you can return to your normal life.",
     );
-    ctx.print_color_centered(
-      7,
-      GREEN,
-      BLACK,
-      "Press 1 to \
-        play again.",
-    );
+    ctx.print_color_centered(7, GREEN, BLACK, "Press 1 to play again.");
     if let Some(VirtualKeyCode::Key1) = ctx.key {
       self.reset_game_state();
     }
