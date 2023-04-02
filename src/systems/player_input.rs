@@ -12,6 +12,8 @@ pub fn player_input(
   #[resource] turn_state: &mut TurnState,
 ) {
   let mut players = <(Entity, &Point)>::query().filter(component::<Player>());
+  let mut enemies = <(Entity, &Point)>::query().filter(component::<Enemy>());
+
   let Some(key) = *key else { return };
 
   let delta = match key {
@@ -22,18 +24,13 @@ pub fn player_input(
     _ => Point::new(0, 0),
   };
 
-  let mut did_something = false;
-  if delta == Point::zero() {
-    return;
-  }
-
   let (player_entity, destination) = players
     .iter(ecs)
     .map(|(entity, pos)| (*entity, *pos + delta))
     .next()
     .unwrap();
 
-  let mut enemies = <(Entity, &Point)>::query().filter(component::<Enemy>());
+  let mut did_something = false;
   if delta.x != 0 || delta.y != 0 {
     let mut hit_something = false;
 
