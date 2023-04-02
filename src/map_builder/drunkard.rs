@@ -4,7 +4,7 @@ pub struct DrunkardsWalkArchitect {}
 
 impl DrunkardsWalkArchitect {
   fn drunkard(&mut self, start: &Point, rng: &mut RandomNumberGenerator, map: &mut Map) {
-    let mut drunkard_pos = start.clone();
+    let mut drunkard_pos = *start;
     let mut distance_staggered = 0;
 
     loop {
